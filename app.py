@@ -4,11 +4,10 @@ import cmath, math
 app = Flask(__name__)
 
 def calculate_voltages(V_s, total_length, z_per_meter, load_points):
-    # ... (unchanged backward sweep) ...
     loads = sorted(load_points, key=lambda x: x[0])
     distances = [d for d, _ in loads]
     currents = [I for _, I in loads]
-    cum_currents = [sum(currents[i:]) for i in range(len(currents))]
+    cum_currents = [sum(currents[i:], complex(0)) for i in range(len(currents))]
 
     voltages = {}
     V_prev = V_s
@@ -30,7 +29,7 @@ def index():
     if request.method == "POST":
         try:
             # Source voltage
-            V_mag   = float(request.form["V_mag"])
+            V_mag = float(request.form["V_mag"])
             V_angle = float(request.form["V_angle"])
             V_s = cmath.rect(V_mag, math.radians(V_angle))
 
@@ -41,7 +40,7 @@ def index():
             z_per_meter = complex(R, X)
 
             # Loads: distance, current magnitude, PF, PF type
-            ds  = request.form.getlist("distance[]")
+            ds = request.form.getlist("distance[]")
             Ims = request.form.getlist("I_mag[]")
             PFs = request.form.getlist("PF[]")
             types = request.form.getlist("PF_type[]")
@@ -49,22 +48,26 @@ def index():
             load_points = []
             for d_str, Im_str, pf_str, t in zip(ds, Ims, PFs, types):
                 if d_str and Im_str and pf_str and t:
-                    d  = float(d_str)
+                    d = float(d_str)
                     Im = float(Im_str)
                     pf = float(pf_str)
+                    if pf < 0 or pf > 1:
+                        raise ValueError(f"Power Factor must be between 0 and 1, got {pf}")
                     phi = math.acos(pf)
-                    # sign: lagging => -phi, leading => +phi
                     angle = -phi if t == 'lagging' else phi
                     I_complex = cmath.rect(Im, angle)
                     load_points.append((d, I_complex))
+            
+            if not load_points:
+                raise ValueError("No valid load points provided.")
 
             volts = calculate_voltages(V_s, total_length, z_per_meter, load_points)
             result = []
-            for dist, V in sorted(volts.items()):
+            for dist, V in volts.items():
                 result.append({
                     'distance': dist,
                     'magnitude': round(abs(V), 2),
-                    'angle':     round(math.degrees(cmath.phase(V)), 2)
+                    'angle': round(math.degrees(cmath.phase(V)), 2)
                 })
             return render_template('index.html', result=result)
         except Exception as e:
