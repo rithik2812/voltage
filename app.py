@@ -2,7 +2,6 @@ from flask import Flask, render_template, request
 import cmath, math
 
 app = Flask(__name__)
-
 def calculate_voltages(V_s, total_length, z_per_meter, load_points):
     loads = sorted(load_points, key=lambda x: x[0])
     distances = [d for d, _ in loads]
