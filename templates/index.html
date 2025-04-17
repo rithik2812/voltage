@@ -1,228 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voltage Calculator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f4f7fc;
-            margin: 0;
-            padding: 0;
-            color: #333;
-        }
-
-        header {
-            background-color: #4CAF50;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-
-        h1 {
-            margin: 0;
-            font-size: 2.5em;
-        }
-
-        form {
-            background-color: white;
-            padding: 20px;
-            max-width: 800px;
-            margin: 30px auto;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        label {
-            font-weight: 600;
-            margin-bottom: 5px;
-            display: block;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0 20px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            font-size: 1em;
-        }
-
-        button {
-        background-color: #4CAF50;
-        color: white;
-        padding: 15px 30px; /* Increased padding for a larger button */
-        border: none;
-        border-radius: 8px; /* Rounded corners for a smoother look */
-        font-size: 1.5em; /* Larger text size */
-        font-weight: bold; /* Bold text for emphasis */
-        cursor: pointer;
-        transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth hover effect */
-    }
-
-    button:hover {
-        background-color: #45a049; /* Slightly darker shade on hover */
-        transform: scale(1.05); /* Slight scaling effect when hovered */
-    }
-
-    button:active {
-        background-color: #388e3c; /* Darker green when clicked */
-        transform: scale(0.98); /* Slight shrink when clicked for a pressed effect */
-    }
-
-        h3 {
-            font-size: 1.5em;
-            margin-top: 20px;
-        }
-
-        .load-point {
-            border-top: 2px solid #f0f0f0;
-            padding-top: 15px;
-            margin-top: 15px;
-        }
-
-        .load-point label {
-            display: inline-block;
-            width: 30%;
-        }
-
-        .load-point input[type="text"] {
-            width: 65%;
-        }
-
-        .load-points {
-            margin-top: 20px;
-        }
-
-        .result {
-            background-color: #e8f5e9;
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 30px;
-            border: 1px solid #81c784;
-        }
-
-        .result h2 {
-            margin-top: 0;
-        }
-
-        .result ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .result li {
-            margin: 10px 0;
-            font-size: 1.1em;
-        }
-
-        .error {
-            color: red;
-            font-weight: bold;
-        }
-
-        .calculate-btn {
-    background-color: #4CAF50;
-    color: white;
-    padding: 15px 30px; /* Increased padding for a larger button */
-    border: none;
-    border-radius: 8px; /* Rounded corners */
-    font-size: 1.5em; /* Larger text */
-    font-weight: 600; /* Bold text */
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition effects */
-}
-
-.calculate-btn:hover {
-    background-color: #45a049;
-    transform: scale(1.05); /* Slightly enlarge the button on hover */
-}
-
-.calculate-btn:focus {
-    outline: none;
-    box-shadow: 0 0 10px rgba(72, 193, 75, 0.6); /* Add a glow effect when focused */
-}
-
-
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Voltage Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    /* your existing CSS */
+  </style>
 </head>
 <body>
-
-<header>
+  <header>
     <h1>Single Phase AC Voltage Drop Calculator</h1>
-</header>
-
-<main>
+  </header>
+  <main>
     <form method="POST">
-        <label for="V_mag">Source Voltage Magnitude (V):</label>
-        <input type="text" id="V_mag" name="V_mag" required>
+      <!-- source / feeder -->
+      <label>Source Voltage Magnitude (V):</label>
+      <input name="V_mag"   required>
+      <label>Source Voltage Angle (°):</label>
+      <input name="V_angle" required>
 
-        <label for="V_angle">Source Voltage Angle (degrees):</label>
-        <input type="text" id="V_angle" name="V_angle" required>
+      <label>Total Length of Distributor (m):</label>
+      <input name="total_length" required>
+      <label>Impedance per m – R (Ω):</label>
+      <input name="R" required>
+      <label>Impedance per m – X (Ω):</label>
+      <input name="X" required>
 
-        <label for="total_length">Total Length of Distributor (m):</label>
-        <input type="text" id="total_length" name="total_length" required>
-
-        <label for="R">Impedance per meter - R (ohm):</label>
-        <input type="text" id="R" name="R" required>
-
-        <label for="X">Impedance per meter - X (ohm):</label>
-        <input type="text" id="X" name="X" required>
-
-        <h3>Load Points</h3>
-        <div id="load-points" class="load-points">
-            <div class="load-point">
-                <label for="distance[]">Distance (m):</label>
-                <input type="text" name="distance[]" required>
-
-                <label for="P[]">P (W):</label>
-                <input type="text" name="P[]" required>
-
-                <label for="Q[]">Q (VAR):</label>
-                <input type="text" name="Q[]" required>
-            </div>
+      <h3>Load Points</h3>
+      <div id="load-points">
+        <div class="load-point">
+          <label>Distance (m):</label>
+          <input name="distance[]" required>
+          <label>Current Magnitude (A):</label>
+          <input name="I_mag[]" required>
+          <label>Power Factor (0–1 lagging):</label>
+          <input name="PF[]" required>
         </div>
+      </div>
 
-        <button type="button" onclick="addLoad()">Add Another Load</button><br><br>
-        <button type="submit" class="calculate-btn">Calculate</button>
+      <button type="button" onclick="addLoad()">Add Another Load</button>
+      <button type="submit">Calculate</button>
     </form>
 
     {% if result %}
-        <div class="result">
-            <h2>Voltage at Load Points:</h2>
-            <ul>
-            {% for item in result %}
-                <li>
-                    Distance: {{ item.distance }} m — 
-                    Voltage Magnitude: {{ item.magnitude }} V — 
-                    Angle: {{ item.angle }}°
-                </li>
-            {% endfor %}
-            </ul>
-        </div>
+    <section class="result">
+      <h2>Voltages at Load Points</h2>
+      <ul>
+        {% for item in result %}
+        <li>
+          {{ item.distance }} m → |V| = {{ item.magnitude }} V, ∠ = {{ item.angle }}°
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
     {% elif error %}
-        <p class="error">Error: {{ error }}</p>
+      <p class="error">Error: {{ error }}</p>
     {% endif %}
-</main>
+  </main>
 
-<script>
-    function addLoad() {
-        const div = document.createElement('div');
-        div.classList.add('load-point');
-        div.innerHTML = `
-            <label>Distance (m):</label>
-            <input type="text" name="distance[]" required>
-            <label>P (W):</label>
-            <input type="text" name="P[]" required>
-            <label>Q (VAR):</label>
-            <input type="text" name="Q[]" required>
-            <br><br>
-        `;
-        document.getElementById('load-points').appendChild(div);
-    }
-</script>
-
+  <script>
+  function addLoad() {
+    const div = document.createElement('div');
+    div.className = 'load-point';
+    div.innerHTML = `
+      <label>Distance (m):</label>
+      <input name="distance[]" required>
+      <label>Current Magnitude (A):</label>
+      <input name="I_mag[]" required>
+      <label>Power Factor (0–1 lagging):</label>
+      <input name="PF[]" required>
+      <br><br>
+    `;
+    document.getElementById('load-points').appendChild(div);
+  }
+  </script>
 </body>
 </html>
